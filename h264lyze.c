@@ -73,7 +73,7 @@ enum h264lyze_user_opt {
 };
 
 // Gets NALU type from h264 object
-int h264lyze_nal_unit_type_get(h264_stream_t* h, uint8_t* buf, int size)
+int h264lyze_nalu_type_get(h264_stream_t* h, uint8_t* buf, int size)
 {
     nal_t* nal = h->nal;
     int nal_size = size;
@@ -116,19 +116,19 @@ int h264lyze_process(h264lyze_t *h264lyze)
 
   buf = (uint8_t*)malloc(H264LYZE_BUFSIZE);
   if (buf == NULL) {
-    printf("Error: Alloc for buffer failed\n");
+    printf("ERROR: Alloc for buffer failed\n");
     return EXIT_FAILURE;
   }
 
   h = h264_new();
   if (h == NULL) {
-    printf("Error: Alloc for h264 object failed\n");
+    printf("ERROR: Alloc for h264 object failed\n");
     return EXIT_FAILURE;
   }
 
   infile = fopen(h264lyze->infile, "rb");
   if (infile == NULL) {
-    printf("Error: File open failed\n");
+    printf("ERROR: File open failed\n");
     return EXIT_FAILURE;
   }
   uint8_t* p = buf;
@@ -137,7 +137,7 @@ int h264lyze_process(h264lyze_t *h264lyze)
       rsz = fread(buf + sz, 1, H264LYZE_BUFSIZE - sz, infile);
       if (rsz == 0) {
           if (ferror(infile)) {
-            printf("Error: read failed: %s \n", strerror(errno));
+            printf("ERROR: read failed: %s \n", strerror(errno));
             break;
           }
           break;
@@ -148,7 +148,7 @@ int h264lyze_process(h264lyze_t *h264lyze)
       {
           nal_num++;
           p += nal_start;
-          h264lyze_nal_unit_type_get (h, p, nal_end - nal_start);
+          h264lyze_nalu_type_get (h, p, nal_end - nal_start);
 
           // Parse h264 bitstream based on user option
           switch(h264lyze->option) {
@@ -245,7 +245,7 @@ int h264lyze_input_check(int argc, char *argv[], h264lyze_t *h264lyze)
   infile = argv[1];
   status = access(infile, F_OK);
   if (status != 0) {
-    printf("Error: File locate %s failed\n", infile);
+    printf("ERROR: File locate %s failed\n", infile);
     h264lyze_usage();
     return EXIT_FAILURE;
   } else {
@@ -269,7 +269,7 @@ int h264lyze_input_check(int argc, char *argv[], h264lyze_t *h264lyze)
         long conv = strtol(argv[3], &p, 10);
         h264lyze->nalu_type = (uint8_t)conv;
       } else {
-        printf("Error: Invalid NALU type\n");
+        printf("ERROR: Invalid NALU type\n");
         h264lyze_usage();
         return EXIT_FAILURE;
       }
@@ -284,7 +284,7 @@ int h264lyze_input_check(int argc, char *argv[], h264lyze_t *h264lyze)
         long conv = strtol(argv[3], &p, 10);
         h264lyze->nalu_num = (uint64_t)conv;
       } else {
-        printf("Error: Invalid NALU number)\n");
+        printf("ERROR: Invalid NALU number)\n");
         h264lyze_usage();
         return EXIT_FAILURE;
       }
@@ -300,11 +300,11 @@ int h264lyze_input_check(int argc, char *argv[], h264lyze_t *h264lyze)
     status = strcmp(argv[2],"--stats");
     if (status == 0) {
       h264lyze->option = H264LYZE_OPT_STATS;
-      printf("Option %s currently not supported\n", argv[2]);
+      printf("ERROR: Option %s currently not supported\n", argv[2]);
       h264lyze_usage();
       return EXIT_FAILURE;
     } else {
-      printf("Error: Invalid option %s\n", argv[2]);
+      printf("ERROR: Invalid option %s\n", argv[2]);
       h264lyze_usage();
       return EXIT_FAILURE;
     }

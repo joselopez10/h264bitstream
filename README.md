@@ -1,4 +1,10 @@
+## h264bitstream
+
 A library to read and write H.264 video bitstreams, in particular to examine or modify headers.
+
+## h264lyze
+
+An h264 analyze variant - Analyze H.264 bitstreams in Annex B format
 
 [![CircleCI](https://circleci.com/gh/aizvorski/h264bitstream.svg?style=shield)](https://circleci.com/gh/aizvorski/h264bitstream)
 
@@ -154,3 +160,8 @@ This library is distributed under the GNU Lesser General Public License.
 Please see the file LICENSE for more details.
 
 Homepage: https://github.com/aizvorski/h264bitstream/
+
+### h264lyze
+
+Written by Jose A. Lopez <joselopez.engineering@gmail.com>
+
