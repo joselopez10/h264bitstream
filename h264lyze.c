@@ -187,11 +187,12 @@ int h264lyze_process(h264lyze_t *h264lyze)
             }
 
             case H264LYZE_OPT_COMPACT: {
-              printf("%u %lld %lld %u\n",
-                     nal_num,
-                     (long long int)(off + (p - buf) + nal_start),
-                     (long long int)(nal_end - nal_start),
-                     h->nal->nal_unit_type);
+              if (h->nal->nal_unit_type < 15) {
+                printf("%u  %u\n",
+                       nal_num,
+                       h->nal->nal_unit_type);
+              }
+
               break;
             }
 
